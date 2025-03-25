@@ -39,11 +39,10 @@ Video_Generation = response.choices[0].message.content
 print(Video_Generation)
 
 audio = generator.generate(
-    text=Video_Generation,
+    text=Video_Generation,  
     speaker=0,
     context=[],
     max_audio_length_ms=10_000,
 )
-
 
 torchaudio.save("output.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
