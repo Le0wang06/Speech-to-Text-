@@ -11,6 +11,12 @@ AudioSegment.converter = r"C:\ffmpeg\bin\ffmpeg.exe"
 
 from generator import load_csm_1b
 import torchaudio
+import torch._dynamo
+
+# 🚫 Fully disable TorchDynamo + Inductor + Triton
+os.environ["TORCHINDUCTOR_DISABLE"] = "1"
+os.environ["TORCHDYNAMO_DISABLE"] = "1"
+os.environ["DISABLE_TORCH_COMPILE"] = "1"
 
 # Initialize the OpenAI client
 client = OpenAI(api_key="sk-87b6197ceca94a52b1d1ffd163a14876", base_url="https://api.deepseek.com")
@@ -27,7 +33,7 @@ response = client.chat.completions.create(
 )
 
 
-generator = load_csm_1b(device="cpu")  # or "cuda" if you have GPU
+generator = load_csm_1b(device="cuda")  # or "cuda" if you have GPU
 
 Video_Generation = response.choices[0].message.content
 print(Video_Generation)
