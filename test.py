@@ -13,6 +13,9 @@ from generator import load_csm_1b
 import torchaudio
 import torch._dynamo
 
+from pydub import AudioSegment
+
+
 # 🚫 Fully disable TorchDynamo + Inductor + Triton
 os.environ["TORCHINDUCTOR_DISABLE"] = "1"
 os.environ["TORCHDYNAMO_DISABLE"] = "1"
@@ -46,3 +49,12 @@ audio = generator.generate(
 )
 
 torchaudio.save("output.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
+
+audio = AudioSegment.from_file("output.wav")
+
+audio = audio.set_frame_rate(44100).set_channels(1).set_sample_width(2)
+
+audio.export("fixed.wav", format="wav")
+
+from playsound import playsound
+playsound("fixed.wav")
